@@ -9,3 +9,4 @@ config.json
 .venv
 __pycache__
 .vscode
+config.py
