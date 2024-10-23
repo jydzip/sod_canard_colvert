@@ -4,7 +4,7 @@ import json
 from websockets.asyncio.server import serve, ServerConnection
 
 from .duck import Duck
-from config import APP_DEBUG, APP_PORT
+from config import APP_DEBUG, APP_HOST, APP_PORT
 
 class Server:
     sockets: set[ServerConnection]
@@ -14,7 +14,7 @@ class Server:
     def __init__(self):
         if APP_DEBUG:
             print("/!\\ DEBUG MODE /!\\")
-        self.host = "10.1.1.98"
+        self.host = APP_HOST
         self.port = APP_PORT
 
         self.sockets = set()
