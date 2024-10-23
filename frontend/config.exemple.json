@@ -2,5 +2,9 @@
     "CONTROLLER": {
         "HOST": "0.0.0.0",
         "PORT": 0
+    },
+    "KEY": {
+        "HOST": "0000",
+        "VISITOR": "0000"
     }
 }
