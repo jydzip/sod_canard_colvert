@@ -14,7 +14,7 @@ class Server:
     def __init__(self):
         if APP_DEBUG:
             print("/!\\ DEBUG MODE /!\\")
-        self.host = "0.0.0.0"
+        self.host = "10.1.1.98"
         self.port = APP_PORT
 
         self.sockets = set()
@@ -59,6 +59,13 @@ class Server:
             "id": str(websocket.id),
             "x": data["x"],
             "y": data["y"]
+        })
+    
+    async def move_duck_activate_fly(self, websocket: ServerConnection, data: dict):
+        await self.__send(self.duckHost, {
+            "status": "success",
+            "message": "server__move_fly",
+            "id": str(websocket.id)
         })
 
     async def disconnect_ducks(self):
@@ -114,6 +121,8 @@ class Server:
     async def handler_message(self, websocket: ServerConnection, msg: str, data: dict):
         if msg == "server__move":
             await self.move_duck(websocket, data)
+        elif msg == "server__move_fly":
+            await self.move_duck_activate_fly(websocket, data)
 
     async def start(self):
         async with serve(self.handler, self.host, self.port):
