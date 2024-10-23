@@ -1,10 +1,9 @@
 import { Component, createContext, useContext } from 'react';
+import { toast } from 'react-toastify';
 
 import { CONTROLLER_WS } from '../Constants';
 import { StateController, DucksData } from '../types/controller.i';
-import DuckSpine from '../components/app/DuckSpine';
 import { Duck } from '../components/app/Duck';
-import { toast } from 'react-toastify';
 
 export const ControllerState = {
     state: 'loading' as StateController,

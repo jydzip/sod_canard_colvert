@@ -23,7 +23,7 @@ const MainScreen = () => {
     <>
       <Background />
       <Shadow
-        src="./rabbit_shadow.png"
+        src="./duck_shadow.png"
         initial={{ rotate: 0, scaleY: 1 }}
         animate={{ rotate: [-5, 5], scaleY: [0.9, 1] }}
         transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
