@@ -58,6 +58,10 @@ const VisitorScreen = ({ onMove }: LoginScreenProps) => {
         controller.MOVE_Fly();
     }
 
+    useEffect(() => {
+        controller.CONTROLLER_init();
+    }, []);
+
     return (
         <>
             <JoystickGlobal>

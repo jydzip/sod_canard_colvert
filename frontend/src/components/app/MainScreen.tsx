@@ -1,11 +1,14 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useController } from "../../contexts/Controller.Context";
 
 
 const MainScreen = () => {
   let th = 0;
   const [tht, setTht] = useState<string>('');
+
+  const controller = useController();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,6 +42,17 @@ const MainScreen = () => {
       <OnGoing>
         Waiting<span>{tht}</span>
       </OnGoing>
+    
+      <JoinGlobal>
+        <span>http://94.103.88.44:3000/?key=92800</span>
+        <QRCode>
+          <img src='./qrcode_join.png' />
+        </QRCode>
+      </JoinGlobal>
+    
+      <CounterDucks>
+        # {Object.keys(controller.ducks).length}
+      </CounterDucks>
     </>
   )
 };
@@ -58,20 +72,6 @@ const Background = styled.div`
     100% {
       background-position: -100% -100%;
     }
-  }
-`
-const Infos = styled.div`
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  bottom: 0;
-  color: #e2e2e2;
-  font-size: 32px;
-  width: 100%;
-
-  & img {
-    width: 100px;
-    margin: 22px;
   }
 `
 
@@ -97,7 +97,7 @@ const Shadow = styled(motion.img)`
 `
 const OnGoing = styled.div`
   position: fixed;
-  top: 40%;
+  top: 30%;
   transform: translateY(-50%);
   font-size: 90px;
   color: #b3b3b3;
@@ -108,4 +108,43 @@ const OnGoing = styled.div`
   & span {
     position: absolute;
   }
+`
+
+const JoinGlobal = styled.div`
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translateX(-50%);
+  text-align: center;
+  text-shadow: none;
+  font-size: 38px;
+  & span {
+    opacity: 0.5;
+    letter-spacing: 1.5px;
+  }
+`
+const QRCode = styled.div`
+  width: 300px;
+  height: 300px;
+  background: #10101042;
+  border-radius: 0 0 30px 0;
+  margin: auto;
+  & img {
+    width: 300px !important;
+    margin-left: 0 !important;
+    opacity: 1 !important;
+  }
+`
+
+const CounterDucks = styled.div`
+  position: fixed;
+  top: 26px;
+  z-index: 99;
+  width: 100%;
+  text-align: left;
+  padding-left: 34px;
+  box-sizing: border-box;
+  text-shadow: none;
+  font-size: 26px;
+  opacity: 0.2;
 `

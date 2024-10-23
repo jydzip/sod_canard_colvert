@@ -57,6 +57,7 @@ const LakeDucks = () => {
     await PIXI.Assets.load(['duckData', 'duckAtlas']);
     animate();
     controller.LAKE_init(window.window.innerWidth);
+    controller.CONTROLLER_init();
     setLoaded(true);
   };
 

@@ -9,6 +9,7 @@ export const ControllerState = {
     state: 'loading' as StateController,
     socket: null as unknown as WebSocket,
     joined: false,
+    started: false,
 
     ducks: {} as DucksData,
     duckState: 0,
@@ -20,7 +21,8 @@ export const ControllerState = {
     JOIN_visitor: (_username: string) => {},
     MOVE: (_x: number, _y: number) => {},
     MOVE_Fly: () => {},
-    LAKE_init: (_width: number) => {}
+    LAKE_init: (_width: number) => {},
+    CONTROLLER_init: () => {}
 }
 const ControllerContext = createContext(ControllerState)
 
@@ -32,6 +34,7 @@ class ControllerProvider extends Component {
         state: 'loading' as StateController,
         socket: null as unknown as WebSocket,
         joined: false,
+        started: false,
         ducks: {} as DucksData,
         duckState: 0,
         lakeWidht: 0
@@ -83,7 +86,6 @@ class ControllerProvider extends Component {
                 else if (message === 'server__move_fly') {
                     const duck = this.state.ducks[data['id']];
                     if (duck) {
-                        console.log(duck);
                         duck.duck.fly = true;
                         this.setState({ 
                             duckState: this.state.duckState + 1
@@ -138,6 +140,7 @@ class ControllerProvider extends Component {
     }
 
     MOVE(x: number, y: number) {
+        if (!this.state.started) return;
         console.log("[Controller#MOVE]", x, y);
         this.send('server__move', {
             'x': x,
@@ -146,12 +149,20 @@ class ControllerProvider extends Component {
     }
 
     MOVE_Fly() {
+        if (!this.state.started) return;
         console.log("[Controller#MOVE] Activate fly");
         this.send('server__move_fly');
     }
 
+    CONTROLLER_init() {
+        this.setState({ started: true });
+    }
+
     LAKE_init(width: number) {
         this.setState({ lakeWidht: width });
+        for (const key in this.state.ducks) {
+            this.state.ducks[key].duck.randomizePosition(width);
+        }
     }
 
     addDuck(key: string, username: string) {
@@ -186,6 +197,7 @@ class ControllerProvider extends Component {
     }
 
     moveDuck(key: string, x: number, y: number) {
+        if (!this.state.started) return;
         const duck = this.state.ducks[key];
         if (duck) {
             const fakeX = duck.duck.x + x;
@@ -233,6 +245,7 @@ class ControllerProvider extends Component {
             state: this.state.state,
             socket: this.state.socket,
             joined: this.state.joined,
+            started: this.state.started,
             ducks: this.state.ducks,
             duckState: this.state.duckState,
             lakeWidht: this.state.lakeWidht,
@@ -241,6 +254,7 @@ class ControllerProvider extends Component {
             MOVE: this.MOVE.bind(this),
             MOVE_Fly: this.MOVE_Fly.bind(this),
             LAKE_init: this.LAKE_init.bind(this),
+            CONTROLLER_init: this.CONTROLLER_init.bind(this),
             addDuck: this.addDuck.bind(this),
             moveDuck: this.moveDuck.bind(this)
         }
