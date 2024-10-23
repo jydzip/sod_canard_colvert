@@ -6,6 +6,7 @@ import * as PIXI from "pixi.js";
 
 import DuckSpine from './DuckSpine';
 import ControllerContext, { useController } from '../../contexts/Controller.Context';
+import LakePresentation from './LakePresentation';
 
 
 const LakeDucks = () => {
@@ -69,23 +70,28 @@ const LakeDucks = () => {
 
   return (
     <Lake>
-        <SpriteFrontLeft src="/lake/tex_lake_front_l.png" />
-        <SpriteFrontRight src="/lake/tex_lake_front_r.png" />
-
         <Stage
-          width={window.window.innerWidth}
-          height={220}
-          options={{ backgroundAlpha: 0, antialias: true, }}
+          width={window.innerWidth}
+          height={window.innerHeight}
+          options={{ backgroundAlpha: 1, antialias: true, background: 0x000000 }}
         >
+          <TilingSprite
+            texture={PIXI.Texture.from(
+              "/lake/tex_background.png"
+            )}
+            width={window.innerWidth}
+            height={window.innerHeight}
+            tilePosition={{ x: 0, y: 0 }}
+          />
           <Container
-            y={35}
+            y={window.innerHeight - 200}
           >
             <TilingSprite
               texture={PIXI.Texture.from(
                 "/lake/tex_lake_ground.png"
               )}
               filters={[displacementFilter]}
-              width={window.window.innerWidth}
+              width={window.innerWidth}
               height={190}
               tilePosition={{ x: 50, y: 0 }}
             />
@@ -94,7 +100,7 @@ const LakeDucks = () => {
                 "/lake/tex_lake_vein.png"
               )}
               filters={[displacementFilter]}
-              width={window.window.innerWidth}
+              width={window.innerWidth}
               height={190}
               tilePosition={{ x: 0, y: 0 }}
               tileScale={{ x: 1.8, y: 0.5 }}
@@ -109,7 +115,20 @@ const LakeDucks = () => {
               tilePosition={{ x: 0, y: 0 }}
               tileScale={{ x: 1, y: 1.1 }}
             />
+          </Container>
+        </Stage>
 
+        <LakePresentation />
+
+        <StageDucks>
+        <Stage
+          width={window.innerWidth}
+          height={window.innerHeight}
+          options={{ backgroundAlpha: 0, antialias: true }}
+        >
+          <Container
+            y={window.innerHeight - 200}
+          >
             {duckDisplay && (
               <>
                 {Object.values(controller.ducks).map((duckObject) => {
@@ -123,6 +142,10 @@ const LakeDucks = () => {
             )}
           </Container>
         </Stage>
+        </StageDucks>
+
+        <SpriteFrontLeft src="/lake/tex_lake_front_l.png" />
+        <SpriteFrontRight src="/lake/tex_lake_front_r.png" />
     </Lake>
   )
 };
@@ -151,16 +174,25 @@ export const Stage = ({ children, ...props }) => {
 const Lake = styled.div`
   position: fixed;
   width: 100%;
-  height: 220px;
+  height: 100%;
   bottom: 0;
 `
 
 const SpriteFrontLeft = styled.img`
   position: fixed;
   bottom: 5%;
+  left: 0;
 `
 const SpriteFrontRight = styled.img`
   position: fixed;
   bottom: 0;
   right: 0;
+`
+
+const StageDucks = styled.div`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 `

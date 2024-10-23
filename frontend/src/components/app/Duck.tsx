@@ -3,12 +3,14 @@ export class Duck {
     username: string;
     x: number;
     y: number;
+    fly: boolean;
 
     constructor(id: string, username: string) {
         this.id = id;
         this.username = username;
         this.x = 0;
         this.y = 0;
+        this.fly = false;
     }
 
     randomizePosition(width: number) {

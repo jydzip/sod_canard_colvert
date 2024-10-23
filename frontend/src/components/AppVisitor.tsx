@@ -1,16 +1,12 @@
 import { AnimatePresence } from 'framer-motion';
-import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import { useController } from '../contexts/Controller.Context';
 import LoginScreen from './visitor/LoginScreen';
-import UseKeyMovePress from './visitor/UseKeyMovePress';
+import VisitorScreen from './visitor/VisitorScreen';
 
 
 const AppVisitor = () => {
-    const { isLeft, isRight, isDown, isUp } = UseKeyMovePress();
-    const animationFrameId = useRef<number | null>(null);
-
     const controller = useController();
 
     function onJoined(username: string) {
@@ -19,35 +15,8 @@ const AppVisitor = () => {
         }
     }
 
-    const loop = () => {
-        onMove();
-        animationFrameId.current = requestAnimationFrame(loop);
-    };
-
-    useEffect(() => {
-        if (!controller.joined) return;
-
-        animationFrameId.current = requestAnimationFrame(loop);
-        return () => {
-            if (animationFrameId.current) {
-                cancelAnimationFrame(animationFrameId.current);
-            }
-        };
-    }, [isLeft, isRight, isDown, isUp]);
-
-    const onMove = () => {
-        if (isLeft) {
-            controller.MOVE(-1, 0);
-        }
-        if (isRight) {
-            controller.MOVE(1, 0);
-        }
-        if (isUp) {
-            controller.MOVE(0, -1);
-        }
-        if (isDown) {
-            controller.MOVE(0, 1);
-        }
+    const onMove = (x: number, y: number) => {
+        controller.MOVE(x, y);
     };
 
     return (
@@ -60,7 +29,7 @@ const AppVisitor = () => {
                 {!controller.joined ? (
                     <LoginScreen onJoined={onJoined} />
                 ) : (
-                    <div>JOINED</div>
+                    <VisitorScreen onMove={onMove} />
                 )}
             </AnimatePresence>
         </AppGlobal>

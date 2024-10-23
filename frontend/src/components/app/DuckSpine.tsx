@@ -48,6 +48,12 @@ const DuckSpine = ({ id }: { id: string }) => {
     move();
   }, [controller.ducks[id]?.duck.x, controller.ducks[id]?.duck.y]);
 
+  useEffect(() => {
+    if (controller.ducks[id]?.duck.fly) {
+      duckCpRef.current.playAnimation({ name: 'fly', loop: true, timeScale: 0.5 });
+    }
+  }, [controller.ducks[id]?.duck.fly]);
+
   return (
     <Container
         ref={containerRef}

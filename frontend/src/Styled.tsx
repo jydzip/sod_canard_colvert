@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
     html {
         font-family: ANTON;
         color: #fff;
-        text-shadow: 1.5px 1.5px 0 #411a00, 1.5px -1.5px 0 #411a00, -1.5px 1.5px 0 #411a00, -1.5px -1.5px 0 #411a00, 1.5px 0px 0 #411a00, 0px 1.5px 0 #411a00, -1.5px 0px 0 #411a00, 0px -1.5px 0 #411a00;
+        text-shadow: 1.5px 1.5px 0 #2e009d, 1.5px -1.5px 0 #2e009d, -1.5px 1.5px 0 #2e009d, -1.5px -1.5px 0 #2e009d, 1.5px 0px 0 #2e009d, 0px 1.5px 0 #2e009d, -1.5px 0px 0 #2e009d, 0px -1.5px 0 #2e009d;
         scroll-behavior: smooth;
     }
     body {

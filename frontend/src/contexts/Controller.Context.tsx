@@ -4,6 +4,7 @@ import { CONTROLLER_WS } from '../Constants';
 import { StateController, DucksData } from '../types/controller.i';
 import DuckSpine from '../components/app/DuckSpine';
 import { Duck } from '../components/app/Duck';
+import { toast } from 'react-toastify';
 
 export const ControllerState = {
     state: 'loading' as StateController,
@@ -19,6 +20,7 @@ export const ControllerState = {
     JOIN_host: () => {},
     JOIN_visitor: (_username: string) => {},
     MOVE: (_x: number, _y: number) => {},
+    MOVE_Fly: () => {},
     LAKE_init: (_width: number) => {}
 }
 const ControllerContext = createContext(ControllerState)
@@ -58,6 +60,11 @@ class ControllerProvider extends Component {
                 
                 const data = JSON.parse(event.data);
                 const message = data.message;
+                const error = data.error;
+
+                if (error) {
+                    toast(error);
+                }
 
                 if (message === 'server__join') {
                     this.setState({
@@ -73,6 +80,16 @@ class ControllerProvider extends Component {
                 }
                 else if (message === 'server__move') {
                     this.moveDuck(data['id'], data['x'], data['y']);
+                }
+                else if (message === 'server__move_fly') {
+                    const duck = this.state.ducks[data['id']];
+                    if (duck) {
+                        console.log(duck);
+                        duck.duck.fly = true;
+                        this.setState({ 
+                            duckState: this.state.duckState + 1
+                        });
+                    }
                 }
                 else if (message === 'server__leave_duck') {
                     this.removeDuck(data['id']);
@@ -129,6 +146,11 @@ class ControllerProvider extends Component {
         });
     }
 
+    MOVE_Fly() {
+        console.log("[Controller#MOVE] Activate fly");
+        this.send('server__move_fly');
+    }
+
     LAKE_init(width: number) {
         this.setState({ lakeWidht: width });
     }
@@ -173,15 +195,28 @@ class ControllerProvider extends Component {
             const lakeWidth = this.state.lakeWidht;
 
             let needUpdate = false;
-            
-            if (fakeX <= lakeWidth - duckWidth && fakeX >= duckWidth / 2) {
-                duck.duck.x = fakeX;
-                needUpdate = true;
-            }
 
-            if (fakeY <= 20 && fakeY >= -40) {
-                duck.duck.y = fakeY;
-                needUpdate = true;
+            if (duck.duck.fly) {
+                if (fakeX <= lakeWidth - duckWidth && fakeX >= duckWidth / 2) {
+                    duck.duck.x = fakeX;
+                    needUpdate = true;
+                }
+    
+                if (fakeY <= 20 && fakeY >= -(window.innerHeight - 120)) {
+                    duck.duck.y = fakeY;
+                    needUpdate = true;
+                }
+            }
+            else {
+                if (fakeX <= lakeWidth - duckWidth && fakeX >= duckWidth / 2) {
+                    duck.duck.x = fakeX;
+                    needUpdate = true;
+                }
+    
+                if (fakeY <= 20 && fakeY >= -40) {
+                    duck.duck.y = fakeY;
+                    needUpdate = true;
+                }
             }
 
             if (needUpdate){
@@ -205,6 +240,7 @@ class ControllerProvider extends Component {
             JOIN_host: this.JOIN_host.bind(this),
             JOIN_visitor: this.JOIN_visitor.bind(this),
             MOVE: this.MOVE.bind(this),
+            MOVE_Fly: this.MOVE_Fly.bind(this),
             LAKE_init: this.LAKE_init.bind(this),
             addDuck: this.addDuck.bind(this),
             moveDuck: this.moveDuck.bind(this)
