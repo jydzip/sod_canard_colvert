@@ -34,7 +34,7 @@ const DuckSpine = ({ id }: { id: string }) => {
 
   function move()
   {
-    if (containerRef.current.x > controller.ducks[id]?.duck.x) {
+    if (controller.ducks[id]?.duck.isLeft) {
       duckCpRef.current.flop();
     }
     else {
@@ -54,11 +54,32 @@ const DuckSpine = ({ id }: { id: string }) => {
     }
   }, [controller.ducks[id]?.duck.fly]);
 
+  useEffect(() => {
+    if (controller.ducks[id]?.duck.kwak) {
+      const track = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+      const audio = new Audio(`/sounds/kwak${track}.mp3`);
+      audio.addEventListener('ended', () => {
+        controller.KWAK_End(id);
+        duckCpRef.current.playEmptyAnimation(1);
+        audio.remove();
+      });
+
+      duckCpRef.current.playAnimation({ name: 'kwak', loop: true, track: 1, timeScale: 0.7 });
+      audio.play();
+    }
+  }, [controller.ducks[id]?.duck.kwak]);
+
   return (
     <Container
-        ref={containerRef}
-        x={0}
-        y={Y_OFFSET}
+      ref={containerRef}
+      interactive={true}
+      onclick={() => controller.deadDuck(id)}
+      pointerover={() => {
+        containerRef.current.cursor = 'url(/cursor_cible.png) 50 50, auto';
+      }}
+      pointerout={() => {
+        containerRef.current.cursor = 'auto';
+      }}
     >
       <Text
         text={`${duck?.username}`}
@@ -93,16 +114,22 @@ export class DuckSpineComponent
       this.view.addChild(this.spine);
     }
 
-    playAnimation({ name, loop = false, timeScale = 1 }) {
-      const trackEntry = this.spine.state.setAnimation(0, name, loop);
+    playAnimation({ name, loop = false, timeScale = 1, track = 0 }) {
+      const trackEntry = this.spine.state.setAnimation(track, name, loop);
       trackEntry.timeScale = timeScale;
     }
 
+    playEmptyAnimation(track = 0) {
+      this.spine.state.setEmptyAnimation(track, 0.5)
+    }
+
     flip() {
+      console.log("flip");
       this.spine.scale.x = -0.3;
     }
 
     flop() {
+      console.log("flop");
       this.spine.scale.x = 0.3;
     }
 }

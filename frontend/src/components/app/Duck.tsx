@@ -4,6 +4,9 @@ export class Duck {
     x: number;
     y: number;
     fly: boolean;
+    kwak: boolean;
+    isLeft: boolean;
+    isRight: boolean;
 
     constructor(id: string, username: string) {
         this.id = id;
@@ -11,6 +14,7 @@ export class Duck {
         this.x = 0;
         this.y = 0;
         this.fly = false;
+        this.kwak = false;
     }
 
     randomizePosition(width: number) {

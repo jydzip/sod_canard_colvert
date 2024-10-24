@@ -1,3 +1,9 @@
+# Canard Colvert - SOD Presentation 🦆 - Server Backend
+
+## Informations
+- Language: `Python`
+- Librairies: `websockets`
+
 # Installation
 ## 1.1 Configuration environment
 - Create Python environment

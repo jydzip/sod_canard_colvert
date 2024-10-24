@@ -1,8 +1,7 @@
-import { Input } from "antd";
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Joystick } from 'react-joystick-component';
+
 import { useController } from "../../contexts/Controller.Context";
 
 type JoystickDirection = "FORWARD" | "RIGHT" | "LEFT" | "BACKWARD";
@@ -58,6 +57,10 @@ const VisitorScreen = ({ onMove }: LoginScreenProps) => {
         controller.MOVE_Fly();
     }
 
+    function activateKwak() {
+        controller.KWAK();
+    }
+
     useEffect(() => {
         controller.CONTROLLER_init();
     }, []);
@@ -69,14 +72,17 @@ const VisitorScreen = ({ onMove }: LoginScreenProps) => {
                     size={window.window.innerHeight / 2}
                     baseColor="#2F2422"
                     stickColor="#0C7A50"
+                    stickImage="/joystick.png"
                     move={handleMove}
                     stop={handleStop}
                     start={handleStart}
                     throttle={200}
                 >
                 </Joystick>
+                <Help><img src="/info.png" /> Joystick</Help>
             </JoystickGlobal>
-            <div onClick={() => activateFlyMode()}>FLY MODE</div>
+            <Button onClick={() => activateFlyMode()}>🪽 FLY MODE</Button>
+            <Button onClick={() => activateKwak()}>🦆 Kwak kwak!</Button>
         </>
     )
 };
@@ -85,7 +91,7 @@ export default VisitorScreen;
 
 const JoystickGlobal = styled.div`
   position: fixed;
-  top: 20%;
+  top: 30%;
   left: 50%;
   transform: translate(-50%);
 
@@ -95,4 +101,30 @@ const JoystickGlobal = styled.div`
   & div {
     border: 5px solid #b7acaa4a;
   }
+`
+
+const Button = styled.div`
+    font-size: 30px;
+    text-shadow: none !important;
+    color: #ffffffbd;
+    background: #0C7A50;
+    padding: 10px 50px;
+    border-radius: 13px;
+    cursor: pointer;
+    box-shadow: 2px 5px 20px #000000, inset 0px -5px 3px #a3b736;
+    margin: 15px 30px;
+`
+const Help = styled.div`
+    border: 0 !important;
+    text-align: center;
+    font-size: 26px;
+    text-shadow: none;
+    color: #ababab66;
+    font-style: italic;
+    margin-top: 15px;
+    & img {
+        opacity: 0.3;
+        position: relative;
+        z-index: -1;
+    }
 `

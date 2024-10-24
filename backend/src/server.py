@@ -36,16 +36,15 @@ class Server:
                     "message": "server__leave_duck",
                     "id": str(websocket.id)
                 })
-        
 
         self.sockets.remove(websocket)
         if websocket.id in self.ducks:
-            del self.ducks[websocket.id]
+            del self.ducks[str(websocket.id)]
 
     async def join_duck(self, websocket: ServerConnection, data: dict):
         print(f"[Server] NEW duck {websocket.remote_address} # {data['username']}")
         duck = Duck(websocket, data['username'])
-        self.ducks[websocket.id] = duck
+        self.ducks[str(websocket.id)] = duck
         
         await self.__send(self.duckHost, {
             "message": "server__new_duck",
@@ -67,6 +66,24 @@ class Server:
             "message": "server__move_fly",
             "id": str(websocket.id)
         })
+    
+    async def kwak_duck(self, websocket: ServerConnection, data: dict):
+        await self.__send(self.duckHost, {
+            "status": "success",
+            "message": "server__kwak",
+            "id": str(websocket.id)
+        })
+    
+    async def dead_duck(self, websocket: ServerConnection, data: dict):
+        id = data.get("id")
+        duck = self.ducks[id]
+        if duck:
+            del self.ducks[id]
+            await self.__send(duck.ws, {
+                "status": "success",
+                "message": "server__join",
+                "is_joined": False
+            })
 
     async def disconnect_ducks(self):
         for duck in self.ducks.values():
@@ -123,6 +140,10 @@ class Server:
             await self.move_duck(websocket, data)
         elif msg == "server__move_fly":
             await self.move_duck_activate_fly(websocket, data)
+        elif msg == "server__kwak":
+            await self.kwak_duck(websocket, data)
+        elif msg == "server__dead":
+            await self.dead_duck(websocket, data)
 
     async def start(self):
         async with serve(self.handler, self.host, self.port):

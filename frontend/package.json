@@ -1,7 +1,7 @@
 {
     "name": "sod-canard_colvert",
     "private": true,
-    "version": "0.0.1",
+    "version": "0.9",
     "description": "SOD Canard Colvert Presentation",
     "author": "@jydzip",
     "scripts": {

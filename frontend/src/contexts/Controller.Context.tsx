@@ -16,11 +16,14 @@ export const ControllerState = {
     lakeWidht: 0,
     addDuck: (_key: string) => {},
     moveDuck: (_key: string, _x: number, _y: number) => {},
+    deadDuck: (_key: string) => {},
 
     JOIN_host: () => {},
     JOIN_visitor: (_username: string) => {},
     MOVE: (_x: number, _y: number) => {},
     MOVE_Fly: () => {},
+    KWAK: () => {},
+    KWAK_End: (_key: string) => {},
     LAKE_init: (_width: number) => {},
     CONTROLLER_init: () => {}
 }
@@ -95,6 +98,15 @@ class ControllerProvider extends Component {
                 else if (message === 'server__leave_duck') {
                     this.removeDuck(data['id']);
                 }
+                else if (message === 'server__kwak') {
+                    const duck = this.state.ducks[data['id']];
+                    if (duck) {
+                        duck.duck.kwak = true;
+                        this.setState({ 
+                            duckState: this.state.duckState + 1
+                        });
+                    }
+                }
             };
     
             socket.onclose  = () => {
@@ -154,6 +166,12 @@ class ControllerProvider extends Component {
         this.send('server__move_fly');
     }
 
+    KWAK() {
+        if (!this.state.started) return;
+        console.log("[Controller#KWAK]");
+        this.send('server__kwak');
+    }
+
     CONTROLLER_init() {
         this.setState({ started: true });
     }
@@ -183,7 +201,6 @@ class ControllerProvider extends Component {
 
     removeDuck(key: string) {
         const duck = this.state.ducks[key];
-        
         if (duck) {
             delete this.state.ducks[key];
             this.setState({ 
@@ -206,6 +223,17 @@ class ControllerProvider extends Component {
             const lakeWidth = this.state.lakeWidht;
 
             let needUpdate = false;
+
+            if (x < 0 && !duck.duck.isLeft) {
+                duck.duck.isLeft = true;
+                duck.duck.isRight = false;
+                needUpdate = true;
+            }
+            else if (x > 0 && !duck.duck.isRight) {
+                duck.duck.isLeft = false;
+                duck.duck.isRight = true;
+                needUpdate = true;
+            }
 
             if (duck.duck.fly) {
                 if (fakeX <= lakeWidth - duckWidth && fakeX >= duckWidth / 2) {
@@ -238,6 +266,28 @@ class ControllerProvider extends Component {
         }
     }
 
+    deadDuck(key: string) {
+        if (!this.state.started) return;
+        const duck = this.state.ducks[key];
+        if (duck) {
+            console.log("[Controller#DEAD]", key);
+            this.send('server__dead', {
+                'id': key
+            });
+            this.removeDuck(key);
+        }
+    }
+
+    KWAK_End(key: string) {
+        const duck = this.state.ducks[key];
+        if (duck) {
+            duck.duck.kwak = false;
+            this.setState({ 
+                duckState: this.state.duckState + 1
+            });
+        }
+    }
+
     render() {
         // @ts-ignore
         const { children } = this.props
@@ -253,10 +303,13 @@ class ControllerProvider extends Component {
             JOIN_visitor: this.JOIN_visitor.bind(this),
             MOVE: this.MOVE.bind(this),
             MOVE_Fly: this.MOVE_Fly.bind(this),
+            KWAK: this.KWAK.bind(this),
+            KWAK_End: this.KWAK_End.bind(this),
             LAKE_init: this.LAKE_init.bind(this),
             CONTROLLER_init: this.CONTROLLER_init.bind(this),
             addDuck: this.addDuck.bind(this),
-            moveDuck: this.moveDuck.bind(this)
+            moveDuck: this.moveDuck.bind(this),
+            deadDuck: this.deadDuck.bind(this)
         }
         return (
             <ControllerContext.Provider value={value}>

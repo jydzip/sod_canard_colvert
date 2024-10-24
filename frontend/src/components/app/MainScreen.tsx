@@ -44,7 +44,9 @@ const MainScreen = () => {
       </OnGoing>
     
       <JoinGlobal>
-        <span>http://94.103.88.44:3000/?key=92800</span>
+        <h2>kwak.ekoow.xyz<span>/?key=92800</span></h2>
+        <h3>Join SOD!</h3>
+        <h4>Kwak kwak-</h4>
         <QRCode>
           <img src='./qrcode_join.png' />
         </QRCode>
@@ -117,10 +119,37 @@ const JoinGlobal = styled.div`
   transform: translateX(-50%);
   text-align: center;
   text-shadow: none;
-  font-size: 38px;
-  & span {
+  & h2 {
     opacity: 0.5;
     letter-spacing: 1.5px;
+    font-size: 38px;
+    margin: 0;
+    font-weight: 100;
+  }
+  & h2 span {
+    color: #f4ff97;
+  }
+  h3 {
+    margin: 0;
+    font-size: 49px;
+    position: absolute;
+    transform: rotate(-10deg);
+    margin-left: -100px;
+    color: #ffc328;
+    font-weight: 100;
+    opacity: 0.8;
+    margin-top: 30px;
+  }
+  h4 {
+    margin: 0;
+    font-size: 30px;
+    position: absolute;
+    transform: rotate(17deg);
+    margin-left: 410px;
+    color: #ffc328;
+    font-weight: 100;
+    opacity: 0.25;
+    margin-top: 110px;
   }
 `
 const QRCode = styled.div`

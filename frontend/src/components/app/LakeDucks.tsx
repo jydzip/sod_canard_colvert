@@ -109,12 +109,30 @@ const LakeDucks = () => {
 
             <TilingSprite
               texture={PIXI.Texture.from(
+                "/lake/tex_lake_back_hills.png"
+              )}
+              width={window.window.innerWidth}
+              height={130}
+              y={-300}
+              tilePosition={{ x: 0, y: 0 }}
+            />
+            <TilingSprite
+              texture={PIXI.Texture.from(
                 "/lake/tex_lake_back.png"
               )}
               width={window.window.innerWidth}
               height={208}
               tilePosition={{ x: 0, y: 0 }}
               tileScale={{ x: 1, y: 1.1 }}
+            />
+            <TilingSprite
+              texture={PIXI.Texture.from(
+                "/lake/tex_lake_back_flowers.png"
+              )}
+              width={window.window.innerWidth}
+              height={200}
+              y={-180}
+              tilePosition={{ x: 0, y: 0 }}
             />
           </Container>
         </Stage>
@@ -147,6 +165,10 @@ const LakeDucks = () => {
 
         <SpriteFrontLeft src="/lake/tex_lake_front_l.png" />
         <SpriteFrontRight src="/lake/tex_lake_front_r.png" />
+
+        <SpriteCloud1 src="/lake/tex_lake_cloud1.png" />
+        <SpriteCloud2 src="/lake/tex_lake_cloud2.png" />
+        <SpriteCloud3 src="/lake/tex_lake_cloud3.png" />
     </Lake>
   )
 };
@@ -189,6 +211,21 @@ const SpriteFrontRight = styled.img`
   bottom: 0;
   right: 0;
 `
+const SpriteCloud1 = styled.img`
+  position: fixed;
+  top: -26px;
+  right: -20%;;
+`
+const SpriteCloud2 = styled.img`
+  position: fixed;
+  top: -129px;
+  right: 21%;
+`
+const SpriteCloud3 = styled.img`
+  position: fixed;
+  top: -58px;
+  left: -6%;
+`
 
 const StageDucks = styled.div`
   position: fixed;
@@ -196,5 +233,4 @@ const StageDucks = styled.div`
   height: 100%;
   top: 0;
   left: 0;
-  pointer-events: none;
 `
